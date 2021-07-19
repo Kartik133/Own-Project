@@ -12,13 +12,12 @@ class Slingshot {
        World.add(world,this.body);
    }
 
-   attach(body){
-     
-     Matter.Body.setPosition(stone.body,{x:boy.x,y:boy.y});
+   attach(body) {
      this.body.bodyA = body;
+     Matter.Body.setPosition(stone.body,{x:boy.x,y:boy.y});
    }
 
-   fly(){
+   fly() {
      this.body.bodyA = null;
    }
 
@@ -26,9 +25,10 @@ class Slingshot {
      if(this.body.bodyA) {
       var pointA = this.body.bodyA.position;
       var pointB = this.pointB;
-      stroke(0,0,0);
-      fill(0,0,0);
-      line(pointA.x,pointA.y,pointB.x,pointB.y);
+      push();
+       stroke(0,0,0);
+       line(pointA.x,pointA.y,pointB.x,pointB.y);
+      pop();
      }
    }
 }
