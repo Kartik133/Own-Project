@@ -22,20 +22,26 @@ var wall_img,wall_img2,wall1,wall2,wall3,wall4,wall5,wall6,wall7,wall8;
 var invisibleGround,invisibleGround2,invisibleGround3,invisibleGround4,invisibleGround5;
 var fire,fire_img,fireGroup;
 var monster,monsterImg; 
-var slingshot;
-var stone,stone_Img;
-var stone2;
+var arrow,arrowImg,arrowGroup;
 var keyImg,key1,key2,key3;
+var count = 0;
 var ground;
 var obstacle,obstacle_Img,obstacleGroup;
+var treasure,treasureImg;
 var spine,spine2,spine3,spine4,spine5,spine_img,spine_img2,spine_img3,spine_img4,spine_img5,spineGroup;
 var resetButton;
+var smile,smileImg;
+var winBgImg;
+var x=0,y=0;
 var keyCount = 0,keyCount2 = 0;
 var timeRemainingMinutes = 2;
 var timeRemainingSeconds = 59; 
 
 function preload() {
   background_img = loadImage("Background img.png");
+  treasureImg = loadImage("Treasure.png");
+  winBgImg = loadImage("Win background.jpeg");
+  arrowImg = loadImage("arrow1.png");
   doorImg = loadImage("Door Img.png");
   boyImg = loadAnimation("download.png","download2.png","download3.png","download4.png","download5.png","download6.png");
   boyImg2 = loadAnimation("download7.png","download8.png","download9.png","download10.png","download11.png","download12.png");
@@ -46,7 +52,6 @@ function preload() {
   fire_img = loadImage("fire.png");
   monsterImg = loadImage("Monster.png");
   bgImg3 = loadImage("download (1).png");
-  stone_Img = loadImage("stone.png");
   keyImg = loadImage("key.png");
   obstacle_Img = loadImage("Stone1.png");
   spine_img = loadImage("cactus.png");
@@ -67,6 +72,7 @@ function setup() {
   obstacleGroup = new Group();
   fireGroup = new Group();
   spineGroup = new Group();
+  arrowGroup = new Group();
 
   boy = createSprite(380,30); 
   boy.addAnimation("boy",boyImg);
@@ -74,7 +80,7 @@ function setup() {
   boy.addAnimation("boy3",boyImg3);
   boy.scale = 0.3;
 
-  ground = createSprite(400,580,9000,40);
+  ground = createSprite(5000,580,100000,40);
   
   game = new Game(); 
   
@@ -107,6 +113,10 @@ function setup() {
   wall2.scale = 0.7;
   wall2.velocityX = -5;
 
+  treasure = createSprite(7000,490);
+  treasure.addImage("treasures",treasureImg);
+  treasure.scale = 0.5
+
   wall3 = createSprite(520,440);
   wall3.addImage(wall_img2);
   wall3.scale = 0.7;
@@ -114,6 +124,11 @@ function setup() {
   wall4 = createSprite(630,440);
   wall4.addImage(wall_img2);
   wall4.scale = 0.7;
+
+  resetButton = createButton("RESTART");
+  resetButton.style('width', '80px');
+  resetButton.style('height', '40px');
+  resetButton.style('background', 'orange');
 
   wall5 = createSprite(960,200);
   wall5.addImage(wall_img);
@@ -141,7 +156,6 @@ function setup() {
   key3.scale = 0.3;
 
   buttons = new Buttons();
-  //buttons.display();
 
   form = new Form();
 
@@ -182,6 +196,21 @@ function setup() {
   cardboard35 = createSprite(670,455,20,130);
   cardboard36 = createSprite(720,510,120,20);  
 
+  monster = createSprite(2500,490);
+  monster.addAnimation("monster",monsterImg);
+  monster.addAnimation("monster2",keyImg);
+  monster.scale = 0.4;
+
+  monster2 = createSprite(4500,490);
+  monster2.addAnimation("monster",monsterImg);
+  monster2.addAnimation("monster2",keyImg);
+  monster2.scale = 0.4;
+
+  monster3 = createSprite(6500,490);
+  monster3.addAnimation("monster",monsterImg);
+  monster3.addAnimation("monster2",keyImg);
+  monster3.scale = 0.4;
+
   spine = createSprite(1280,390);
   spine.addImage("spine",spine_img3);
   spine.scale = 0.15;
@@ -205,6 +234,10 @@ function setup() {
 function draw() { 
   background(background_img);
   Engine.update(engine);
+
+  console.log(camera.x,100,100);
+
+  resetButton.position(x,y);
 
   wall2.bounceOff(invisibleGround);
   wall2.bounceOff(invisibleGround2);
@@ -257,8 +290,6 @@ function draw() {
     form.display();
     game.form();
   } 
-
-  //console.log(boy.x,boy.y,gameState);
 
   if(gameState==="countdown") {
     game.countdown();
@@ -335,12 +366,14 @@ function draw() {
 
   if(gameState==="countdown2") {
     game.countdown2();
-
+ 
     countdown("level2");
   }
 
    if(gameState==="level2") {
     game.play2();
+
+    spine.debug = true;
 
     camera.x = boy.x +300;
 
@@ -380,9 +413,9 @@ function draw() {
       boy.velocityX = 0;
     }
 
-    if(boy.isTouching(spine) || boy.isTouching(spine2) || boy.isTouching(spine3) || boy.isTouching(spine4) || boy.isTouching(spine5)) {
+    /*if(boy.isTouching(spine) || boy.isTouching(spine2) || boy.isTouching(spine3) || boy.isTouching(spine4) || boy.isTouching(spine5)) {
         gameState = "end";
-    }
+    }*/
 
     spine.setCollider("rectangle",0,0,300,300);
     
@@ -417,7 +450,7 @@ function draw() {
     if(boy.isTouching(door) && keyCount===3) {
       boy.x = 10;
       boy.y = 510;
-      gameState = "countdown3";
+      gameState = "level3";
     }
 
     if(boy.isTouching(door) && keyCount<3) {
@@ -434,10 +467,237 @@ function draw() {
   if(gameState==="countdown3") {
       game.countdown3();
 
-      countdown("level3");
+      countdown("gameState3");
+  }
+  
+  if(gameState==="level3") {
+    game.play3();
+
+    if(keyDown("space")) {
+      spawnArrow();
+    }else{
+      count = 0;
+    }
+
+    if(boy.isTouching(spine5)) { 
+       gameState = "end";
+       obstacleGroup.destroyEach();
+    }
+
+    spawnStones();
+
+    if(gameState2==="1") {
+      spawnFires(monster);
+    }
+    
+    if(gameState3==="1") {
+      spawnFires(monster2);
+    }
+
+    if(gameState4==="1") {
+      spawnFires(monster3);
+    }
+
+    boy.setCollider("rectangle",-15,0,120,150);
+
+    if(obstacleGroup.isTouching(ground)) {
+      obstacleGroup.destroyEach();
+    }
+
+    if(fireGroup.isTouching(ground)) {
+      fireGroup.destroyEach();
+    }
+
+    boy.changeAnimation("boy3",boyImg3);
+
+    if(keyDown("left")) {
+      boy.x-=20;
+      boy.changeAnimation("boy2",boyImg2);
+    }
+  
+    if(keyDown("up")) {
+      boy.y-=20;
+    }
+  
+    if(keyDown("down")) {
+      boy.y+=20;
+    }
+  
+    if(keyDown("right")) {
+      boy.x+=20;
+      boy.changeAnimation("boy",boyImg);
+    }
+
+    camera.x = boy.x +200;
+
+    boy.collide(ground);
+
+    boy.velocityY = 12;
+
+    if(boy.isTouching(monster) && gameState2==="1") { 
+      gameState = "end";
+      obstacleGroup.destroyEach();
+    }
+
+    if(boy.isTouching(monster2) && gameState3==="1") { 
+      gameState = "end";
+      obstacleGroup.destroyEach();
+    }
+
+    if(boy.isTouching(monster3) && gameState4==="1") { 
+      gameState = "end";
+      obstacleGroup.destroyEach();
+    }
+
+    if(boy.isTouching(obstacleGroup)) { 
+      gameState = "end";
+      obstacleGroup.destroyEach();
+    }
+
+
+    if(boy.isTouching(fireGroup)) { 
+      obstacleGroup.destroyEach();
+      gameState = "end";
+    }
+    
+    if(arrowGroup.isTouching(monster) && gameState2==="1") { 
+       monster.changeAnimation("monster2",keyImg);
+       monster.scale = 0.5;
+       arrowGroup.destroyEach();
+       gameState2 = "2";
+    }
+
+    if(arrowGroup.isTouching(monster2) && gameState3==="1") { 
+      monster2.changeAnimation("monster2",keyImg);
+      monster2.scale = 0.5;
+      arrowGroup.destroyEach();
+      gameState3 = "2";
+    }
+
+    if(arrowGroup.isTouching(monster3) && gameState4==="1") { 
+      monster3.changeAnimation("monster2",keyImg);
+      monster3.scale = 0.5;
+      arrowGroup.destroyEach();
+      gameState4 = "2";
+    }
+
+   // arrowGroup.collide(ground);
+
+    if(gameState2==="2") {
+       if(boy.isTouching(monster)) {
+         monster.destroy();
+         keyCount2+=1;
+       }
+    }
+
+    if(gameState3==="2") {
+      if(boy.isTouching(monster2)) {
+        monster2.destroy();
+        keyCount2+=1;
+      }
+    }
+      
+    if(gameState4==="2") {
+      if(boy.isTouching(monster3)) {
+        monster3.destroy();
+        keyCount2+=1
+      }
+    }
+
+    boy.scale = 0.7;
+
+    if(boy.isTouching(treasure)) {
+      gameState = "won"
+    }
+  }
+
+  if(gameState==="end") {
+    background(0);
+
+    game.end();
+
+    text("Time Remaining:- 00:00",20,150);
+
+    boy.velocityY = 0;
+
+    key1.visible = false;
+    key2.visible = false;
+    key3.visible = false;
+
+    strokeWeight(5);
+    stroke(0,0,255);
+    fill(255,255,0);
+    textSize(100);
+    text("GAME OVER",camera.x-300,camera.y+40);
+  }
+  
+  if(gameState!=="end") {
+    //textSize(10);
+    //text(mouseX + "," + mouseY + "," + camera.x,camera.x-400,camera.y);
+
+    if(timeRemainingSeconds===0) {
+      timeRemainingSeconds = 59;
+      timeRemainingMinutes = timeRemainingMinutes - 1;
+    }
+  
+    if(timeRemainingMinutes===0 && timeRemainingSeconds < 1.1) {
+       gameState = "end";
+    }
+  }
+
+  if(gameState!=="start" && gameState!=="end" && gameState!=="form" && gameState!=="countdown" && gameState!=="countdown2" && gameState!=="countdown3") {
+    if(frameCount%30===0) {
+      timeRemainingSeconds = timeRemainingSeconds - 1;
+    }
+    
+    if(timeRemainingSeconds>9) {
+      fill(0);
+      noStroke();
+      textSize(20);
+      text("Time Remaining:- " + timeRemainingMinutes + ":" + timeRemainingSeconds,camera.x+100,50);
+    }
+
+    if(timeRemainingSeconds<=9) {
+      fill(0);
+      noStroke();
+      textSize(20);
+      text("Time Remaining:- " + timeRemainingMinutes + ":" + "0" + timeRemainingSeconds,camera.x+100,50);
+    }
+
+    if(timeRemainingMinutes===0 && timeRemainingSeconds===0) {
+        gameState = "end";
+    }
+  }
+
+  if(gameState==="won") {
+    game.won();
+
   }
   
   drawSprites(); 
+}
+
+function spawnStones() {
+  if(frameCount%200===0) {
+   obstacle = createSprite(Math.round(random(camera.x-400,camera.x+400)),0);
+   obstacle.addImage("obstacle",obstacle_Img);
+   obstacle.velocityY = 10;
+   obstacle.scale = 0.5;
+   obstacle.lifetime = 200;
+   obstacleGroup.add(obstacle);
+  }
+}
+
+function spawnFires(monster) {
+  if(frameCount%250===0) {
+   fire = createSprite(monster.x-40,monster.y-10);
+   fire.addImage("fire",fire_img);
+   fire.velocityX = -13;
+   fire.velocityY = 1;
+   fire.scale = 0.9;
+   fire.lifetime = 125;
+   fireGroup.add(fire);
+  }
 }
 
 function countdown(state) {
@@ -451,4 +711,21 @@ function countdown(state) {
    textSize(30);
    text("PRESS SPACE KEY TO START THE NEXT LEVEL",camera.x-350,camera.y);
    text("___________________________________________",camera.x-360,camera.y+10);
+}
+
+function spawnArrow() {
+  count++;
+
+  if(count===2) {
+    var arrow = createSprite(100,100,60,10);
+    arrow.addImage(arrowImg);
+    arrow.x = boy.x;
+    arrow.y = boy.y;
+    arrow.lifetime = 500;
+    arrow.velocityX = 8;
+    arrow.velocityY = -1;
+    arrow.scale = 0.5;
+    arrow.setCollider("rectangle",0,0,300,50);
+    arrowGroup.add(arrow);
+  }
 }
