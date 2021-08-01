@@ -413,11 +413,9 @@ function draw() {
       boy.velocityX = 0;
     }
 
-    /*if(boy.isTouching(spine) || boy.isTouching(spine2) || boy.isTouching(spine3) || boy.isTouching(spine4) || boy.isTouching(spine5)) {
+    if(boy.isTouching(spine) || boy.isTouching(spine2) || boy.isTouching(spine3) || boy.isTouching(spine4) || boy.isTouching(spine5)) {
         gameState = "end";
-    }*/
-
-    spine.setCollider("rectangle",0,0,300,300);
+    }    spine.setCollider("rectangle",0,0,300,300);
     
     boy.collide(wall3);
     boy.collide(wall4);
