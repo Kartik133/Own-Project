@@ -56,11 +56,13 @@ class Game {
       wall5.visible = false;
       wall6.visible = false;
       wall7.visible = false;
+      life.visible = false;
       spine.visible = false;
       spine2.visible = false;
       spine3.visible = false;
       spine4.visible = false;
       spine5.visible = false;
+      treasure.visible = false;
 
       resetButton.hide();
    }
@@ -180,6 +182,7 @@ class Game {
      cardboard35.visible = true;
      cardboard36.visible = true;
 
+     life.visible = true;
      boy.visible = true; 
      door.visible = true;
    }
@@ -226,6 +229,7 @@ class Game {
       cardboard35.visible = false;
       cardboard36.visible = false;
 
+      life.visible = false;
       ground.visible = false;
       monster.visible = false;
       boy.visible = false; 
@@ -285,6 +289,7 @@ class Game {
      cardboard35.visible = false;
      cardboard36.visible = false;
 
+     life.visible = true;
      wall1.visible = true;
      wall2.visible = true;
      wall3.visible = true;
@@ -305,6 +310,7 @@ class Game {
 
    play3() {
      background(bgImg3);
+     life.visible = true;
      boy.visible = true; 
      door.visible = true;
      wall1.visible = false;
@@ -325,6 +331,7 @@ class Game {
      spine4.visible = false;
      spine5.visible = true;
      door.visible = false;
+     treasure.visible = true;
    }
 
    countdown3() {
@@ -369,6 +376,7 @@ class Game {
       cardboard35.visible = false;
       cardboard36.visible = false;
 
+      life.visible = false;
       ground.visible = false;
       monster.visible = false;
       boy.visible = false; 
@@ -427,6 +435,7 @@ class Game {
     cardboard35.visible = false;
     cardboard36.visible = false;
 
+    life.visible = false;
     ground.visible = false;
     monster.visible = false;
     monster2.visible = false;
@@ -445,6 +454,7 @@ class Game {
     spine3.visible = false;
     spine4.visible = false;
     spine5.visible = false;
+    treasure.visible = false;
 
     key1.destroy();
     key2.destroy();
@@ -501,6 +511,8 @@ class Game {
       monster3.addAnimation("monster2",keyImg);
       monster3.scale = 0.4;
 
+      lifeCount = 3;
+
       gameState = "form";
     });
    }
@@ -545,6 +557,7 @@ class Game {
       cardboard35.visible = false;
       cardboard36.visible = false;
 
+      life.visible = false;
       ground.visible = false;
       monster.visible = false;
       monster2.visible = false;
@@ -563,6 +576,7 @@ class Game {
       spine3.visible = false;
       spine4.visible = false;
       spine5.visible = false;
+      treasure.visible = false;
 
       resetButton.show();
 
@@ -614,6 +628,8 @@ class Game {
         monster3.addAnimation("monster",monsterImg);
         monster3.addAnimation("monster2",keyImg);
         monster3.scale = 0.4;
+
+        lifeCount = 3;
 
         gameState = "form";
       });

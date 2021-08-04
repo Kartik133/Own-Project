@@ -22,7 +22,7 @@ class Buttons {
         this.play.mousePressed(()=> {
           this.play.hide();
           this.rules.hide();
-          gameState = "form";
+          gameState = "level3";
         });
     }
 }

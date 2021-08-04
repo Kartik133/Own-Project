@@ -2,6 +2,7 @@ var gameState = "start";
 var gameState2 = "1";
 var gameState3 = "1";
 var gameState4 = "1";
+var lifeCount = 3;
 var background_img;
 var buttons;
 var form;
@@ -9,6 +10,7 @@ var database;
 var playerIndex;
 var game,player;
 var playerCount;
+var life,lifeImg;
 var cardboard1,cardboard2,cardboard3,cardboard4,cardboard5,cardboard6,cardboard7,cardboard8,cardboard9,cardboard10,cardboard11,cardboard12,cardboard13,cardboard14,cardboard15,cardboard16,cardboard17,cardboard18,cardboard19,cardboard20,cardboard21,cardboard22,cardboard23,cardboard24,cardboard25,cardboard26,cardboard27,cardboard28,cardboard29,cardboard30,cardboard31,cardboard32,cardboard33,cardboard34,cardboard35,cardboard36;
 const Engine = Matter.Engine;
 const World = Matter.World;
@@ -39,6 +41,7 @@ var timeRemainingSeconds = 59;
 
 function preload() {
   background_img = loadImage("Background img.png");
+  lifeImg = loadImage("lifeImg.png")
   treasureImg = loadImage("Treasure.png");
   winBgImg = loadImage("Win background.jpeg");
   arrowImg = loadImage("arrow1.png");
@@ -79,6 +82,10 @@ function setup() {
   boy.addAnimation("boy2",boyImg2); 
   boy.addAnimation("boy3",boyImg3);
   boy.scale = 0.3;
+
+  life = createSprite(190,35);
+  life.addImage("life",lifeImg);
+  life.scale = 0.05;
 
   ground = createSprite(5000,580,100000,40);
   
@@ -234,6 +241,12 @@ function setup() {
 function draw() { 
   background(background_img);
   Engine.update(engine);
+
+  life.x = camera.x-210;
+
+  if(lifeCount===0) {
+    gameState = "end";
+  }
 
   console.log(camera.x,100,100);
 
@@ -414,8 +427,12 @@ function draw() {
     }
 
     if(boy.isTouching(spine) || boy.isTouching(spine2) || boy.isTouching(spine3) || boy.isTouching(spine4) || boy.isTouching(spine5)) {
-        gameState = "end";
-    }    spine.setCollider("rectangle",0,0,300,300);
+        lifeCount-=1;
+        boy.x = 50;
+        boy.y = 470;
+    }    
+    
+    spine.setCollider("rectangle",0,0,300,300);
     
     boy.collide(wall3);
     boy.collide(wall4);
@@ -478,8 +495,9 @@ function draw() {
     }
 
     if(boy.isTouching(spine5)) { 
-       gameState = "end";
-       obstacleGroup.destroyEach();
+       lifeCount-=1;
+       boy.x = 10;
+       boy.y = 510;
     }
 
     spawnStones();
@@ -533,29 +551,34 @@ function draw() {
     boy.velocityY = 12;
 
     if(boy.isTouching(monster) && gameState2==="1") { 
-      gameState = "end";
-      obstacleGroup.destroyEach();
+      lifeCount-=1;
+      boy.x = 10;
+      boy.y = 510;
     }
 
     if(boy.isTouching(monster2) && gameState3==="1") { 
-      gameState = "end";
-      obstacleGroup.destroyEach();
+      lifeCount-=1;
+      boy.x = 10;
+      boy.y = 510;
     }
 
     if(boy.isTouching(monster3) && gameState4==="1") { 
-      gameState = "end";
-      obstacleGroup.destroyEach();
+      lifeCount-=1;
+      boy.x = 10;
+      boy.y = 510;
     }
 
     if(boy.isTouching(obstacleGroup)) { 
-      gameState = "end";
-      obstacleGroup.destroyEach();
+      lifeCount-=1;
+      boy.x = 10;
+      boy.y = 510;
     }
 
 
     if(boy.isTouching(fireGroup)) { 
-      obstacleGroup.destroyEach();
-      gameState = "end";
+      lifeCount-=1;
+      boy.x = 10;
+      boy.y = 510;
     }
     
     if(arrowGroup.isTouching(monster) && gameState2==="1") { 
@@ -578,8 +601,6 @@ function draw() {
       arrowGroup.destroyEach();
       gameState4 = "2";
     }
-
-   // arrowGroup.collide(ground);
 
     if(gameState2==="2") {
        if(boy.isTouching(monster)) {
@@ -614,6 +635,10 @@ function draw() {
 
     game.end();
 
+    obstacleGroup.destroyEach();
+    fireGroup.destroyEach();
+    arrowGroup.destroyEach();
+
     text("Time Remaining:- 00:00",20,150);
 
     boy.velocityY = 0;
@@ -647,6 +672,11 @@ function draw() {
     if(frameCount%30===0) {
       timeRemainingSeconds = timeRemainingSeconds - 1;
     }
+
+    fill(0);
+    noStroke();
+    textSize(17);
+    text("Lifes Remaining :- " + lifeCount,camera.x-375,40);
     
     if(timeRemainingSeconds>9) {
       fill(0);
@@ -669,7 +699,6 @@ function draw() {
 
   if(gameState==="won") {
     game.won();
-
   }
   
   drawSprites(); 
@@ -720,7 +749,7 @@ function spawnArrow() {
     arrow.x = boy.x;
     arrow.y = boy.y;
     arrow.lifetime = 500;
-    arrow.velocityX = 8;
+    arrow.velocityX = 13;
     arrow.velocityY = -1;
     arrow.scale = 0.5;
     arrow.setCollider("rectangle",0,0,300,50);
