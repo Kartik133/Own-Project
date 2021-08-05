@@ -41,7 +41,7 @@ var timeRemainingSeconds = 59;
 
 function preload() {
   background_img = loadImage("Background img.png");
-  lifeImg = loadImage("lifeImg.png")
+  lifeImg = loadImage("LifeImg.png")
   treasureImg = loadImage("Treasure.png");
   winBgImg = loadImage("Win background.jpeg");
   arrowImg = loadImage("arrow1.png");
