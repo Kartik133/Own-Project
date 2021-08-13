@@ -513,7 +513,7 @@ class Game {
 
       lifeCount = 3;
 
-      gameState = "form";
+      gameState = "level1";
     });
    }
 
@@ -631,7 +631,7 @@ class Game {
 
         lifeCount = 3;
 
-        gameState = "form";
+        gameState = "level1";
       });
    }
 }

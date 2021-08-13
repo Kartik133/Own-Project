@@ -28,6 +28,7 @@ var arrow,arrowImg,arrowGroup;
 var keyImg,key1,key2,key3;
 var count = 0;
 var ground;
+var v=0;
 var obstacle,obstacle_Img,obstacleGroup;
 var treasure,treasureImg;
 var spine,spine2,spine3,spine4,spine5,spine_img,spine_img2,spine_img3,spine_img4,spine_img5,spineGroup;
@@ -132,8 +133,8 @@ function setup() {
   wall4.addImage(wall_img2);
   wall4.scale = 0.7;
 
-  resetButton = createButton("RESTART");
-  resetButton.style('width', '80px');
+  resetButton = createButton("PLAY AGAIN");
+  resetButton.style('width', '120px');
   resetButton.style('height', '40px');
   resetButton.style('background', 'orange');
 
@@ -699,6 +700,14 @@ function draw() {
 
   if(gameState==="won") {
     game.won();
+
+    if(v<100) {
+      var d = createSprite(width/2,height/2,10,10);
+      d.shapeColor = rgb(Math.round(random(0,255)),Math.round(random(0,255)),Math.round(random(0,255)));
+      d.velocityX = random(-10,10);
+      d.velocityY = random(-10,10);
+      v++;
+    }
   }
   
   drawSprites(); 
