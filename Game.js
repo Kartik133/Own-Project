@@ -4,6 +4,8 @@ class Game {
     }
 
     start() {
+      backButton.hide();
+
       key1.visible = false;
       key2.visible = false;
       key3.visible = false;
@@ -70,6 +72,8 @@ class Game {
    form() {
       background(background_img);
 
+      backButton.hide();
+
       key1.visible = false;
       key2.visible = false;
       key3.visible = false;
@@ -84,6 +88,8 @@ class Game {
       key1.visible = false;
       key2.visible = false;
       key3.visible = false;
+
+      backButton.hide();
 
       cardboard1.visible = false;
       cardboard2.visible = false;
@@ -145,6 +151,8 @@ class Game {
    play1() {
      background("green");
 
+     backButton.hide();
+
      cardboard1.visible = true;
      cardboard2.visible = true;
      cardboard3.visible = true;
@@ -188,6 +196,8 @@ class Game {
    }
 
    countdown2() {
+      backButton.hide();
+
       key1.visible = false;
       key2.visible = false;
       key3.visible = false;
@@ -252,6 +262,9 @@ class Game {
 
    play2() {
      background(bg_img2);
+
+     backButton.hide();
+
      cardboard1.visible = false;
      cardboard2.visible = false;
      cardboard3.visible = false;
@@ -310,6 +323,9 @@ class Game {
 
    play3() {
      background(bgImg3);
+
+     backButton.hide();
+
      life.visible = true;
      boy.visible = true; 
      door.visible = true;
@@ -338,6 +354,8 @@ class Game {
       key1.visible = false;
       key2.visible = false;
       key3.visible = false;
+
+      backButton.hide();
 
       cardboard1.visible = false;
       cardboard2.visible = false;
@@ -398,6 +416,8 @@ class Game {
    }
 
    end() {
+   backButton.hide();
+
     cardboard1.visible = false;
     cardboard2.visible = false;
     cardboard3.visible = false;
@@ -513,12 +533,14 @@ class Game {
 
       lifeCount = 3;
 
-      gameState = "level1";
+      gameState = "form";
     });
    }
 
    won() {
       background(winBgImg);
+
+      backButton.hide();
 
       cardboard1.visible = false;
       cardboard2.visible = false;
@@ -631,7 +653,7 @@ class Game {
 
         lifeCount = 3;
 
-        gameState = "level1";
+        gameState = "form";
       });
    }
 }

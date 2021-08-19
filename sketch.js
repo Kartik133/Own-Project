@@ -3,12 +3,13 @@ var gameState2 = "1";
 var gameState3 = "1";
 var gameState4 = "1";
 var lifeCount = 3;
-var background_img;
+var background_img,bg_img2,bgImg3;
 var buttons;
 var form;
 var database;
 var playerIndex;
 var game,player;
+var font;
 var playerCount;
 var life,lifeImg;
 var cardboard1,cardboard2,cardboard3,cardboard4,cardboard5,cardboard6,cardboard7,cardboard8,cardboard9,cardboard10,cardboard11,cardboard12,cardboard13,cardboard14,cardboard15,cardboard16,cardboard17,cardboard18,cardboard19,cardboard20,cardboard21,cardboard22,cardboard23,cardboard24,cardboard25,cardboard26,cardboard27,cardboard28,cardboard29,cardboard30,cardboard31,cardboard32,cardboard33,cardboard34,cardboard35,cardboard36;
@@ -19,7 +20,6 @@ const Constraint = Matter.Constraint;
 var engine,world;
 var doorImg,door;
 var boyImg,boyImg2,boyImg3,boy;
-var bg_img2,bgImg3;
 var wall_img,wall_img2,wall1,wall2,wall3,wall4,wall5,wall6,wall7,wall8;
 var invisibleGround,invisibleGround2,invisibleGround3,invisibleGround4,invisibleGround5;
 var fire,fire_img,fireGroup;
@@ -32,7 +32,7 @@ var v=0;
 var obstacle,obstacle_Img,obstacleGroup;
 var treasure,treasureImg;
 var spine,spine2,spine3,spine4,spine5,spine_img,spine_img2,spine_img3,spine_img4,spine_img5,spineGroup;
-var resetButton;
+var resetButton,backButton;
 var smile,smileImg;
 var winBgImg;
 var x=0,y=0;
@@ -42,6 +42,7 @@ var timeRemainingSeconds = 59;
 
 function preload() {
   background_img = loadImage("Background img.png");
+  font = loadFont("impact.ttf");
   lifeImg = loadImage("LifeImg.png")
   treasureImg = loadImage("Treasure.png");
   winBgImg = loadImage("Win background.jpeg");
@@ -134,9 +135,15 @@ function setup() {
   wall4.scale = 0.7;
 
   resetButton = createButton("PLAY AGAIN");
-  resetButton.style('width', '120px');
+  resetButton.style('width', '80px');
   resetButton.style('height', '40px');
   resetButton.style('background', 'orange');
+
+  backButton = createButton("<--- BACK");
+  backButton.position(25,30);
+  backButton.style('width', '80px');
+  backButton.style('height', '40px');
+  backButton.style('background', 'orange');
 
   wall5 = createSprite(960,200);
   wall5.addImage(wall_img);
@@ -227,7 +234,7 @@ function setup() {
   spine2.addImage("spine2",spine_img);
   spine2.scale = 0.15;
 
-  spine3 = createSprite(520,340);
+  spine3 = createSprite(515,340);
   spine3.addImage("spine3",spine_img2);
   spine3.scale = 0.15;
     
@@ -245,11 +252,17 @@ function draw() {
 
   life.x = camera.x-210;
 
+  backButton.mousePressed(()=> {
+    buttons.play.show();
+    buttons.rules.show();
+    gameState = "start";
+  });
+
   if(lifeCount===0) {
     gameState = "end";
   }
 
-  console.log(camera.x,100,100);
+  console.log(mouseX,camera.x);
 
   resetButton.position(x,y);
 
@@ -372,8 +385,8 @@ function draw() {
     boy.collide(cardboard36);
 
     if(boy.isTouching(door)) {
-      boy.x = 50;
-      boy.y = 470;
+      boy.x = -200;
+      boy.y = 460;
       gameState = "countdown2";
     }
   }
@@ -386,8 +399,6 @@ function draw() {
 
    if(gameState==="level2") {
     game.play2();
-
-    spine.debug = true;
 
     camera.x = boy.x +300;
 
@@ -429,7 +440,7 @@ function draw() {
 
     if(boy.isTouching(spine) || boy.isTouching(spine2) || boy.isTouching(spine3) || boy.isTouching(spine4) || boy.isTouching(spine5)) {
         lifeCount-=1;
-        boy.x = 50;
+        boy.x = -200;
         boy.y = 470;
     }    
     
@@ -640,9 +651,9 @@ function draw() {
     fireGroup.destroyEach();
     arrowGroup.destroyEach();
 
-    text("Time Remaining:- 00:00",20,150);
 
-    boy.velocityY = 0;
+
+  boy.velocityY = 0;
 
     key1.visible = false;
     key2.visible = false;
@@ -669,7 +680,7 @@ function draw() {
     }
   }
 
-  if(gameState!=="start" && gameState!=="end" && gameState!=="form" && gameState!=="countdown" && gameState!=="countdown2" && gameState!=="countdown3") {
+  if(gameState!=="start" && gameState!=="end" && gameState!=="form" && gameState!=="countdown" && gameState!=="countdown2" && gameState!=="countdown3" && gameState!=="rules") {
     if(frameCount%30===0) {
       timeRemainingSeconds = timeRemainingSeconds - 1;
     }
@@ -708,6 +719,37 @@ function draw() {
       d.velocityY = random(-10,10);
       v++;
     }
+  }
+
+  if(gameState==="rules") {
+    background(0);
+
+    backButton.show();
+
+    textSize(30);
+    fill(255);
+    noStroke();
+    textFont(font);
+    textAlign(CENTER);
+    text("RULES",400,50);
+    push();
+     textSize(80);
+     text("__",400,50);
+    pop(); 
+
+    push();
+     fill(255,0,0);
+     text("NOTE      :- You have 3 lives and time limit of 3 minutes.",345,120);
+    pop();
+
+    text("LEVEL-1 :- We have to cross the maze using arrow keys.",350,180);
+    text("LEVEL-2 :- We have to collect all the 3 keys using arrow keys",382,240);
+    text("without touching the cactus.",310,300);
+    text("LEVEL-3 :- We will get many obstacles such as stones,fires and",400,360);
+    text("monsters. Without losing our lives we have to collect",460,420);
+    text("all the 3 keys to complete the level. We can use",425,480);
+    text("arrows to fight with monsters by pressing space bar",455,530);
+    text("when needed.",225,580);
   }
   
   drawSprites(); 

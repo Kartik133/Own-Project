@@ -24,5 +24,11 @@ class Buttons {
           this.rules.hide();
           gameState = "form";
         });
+
+        this.rules.mousePressed(()=> {
+          this.play.hide();
+          this.rules.hide();
+          gameState = "rules";
+        });
     }
 }
